@@ -26,6 +26,7 @@
       You need to enable JavaScript to run this app.
     </noscript>
     <div id="root"></div>
+    <div id="chart_container" style="width:100%; height:400px;"></div> <!--   THE CHART IS LOADED HERE -->    
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -37,4 +38,117 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
+  <script>
+  $(function() {
+  Highcharts.setOptions({ // Change colours
+    colors: ['#FAD331', '#96D5DF', '#1BA8BB', '#C5D930', '#C1A0C5']
+  });
+
+  // Create the chart
+  chart = new Highcharts.Chart('chart_container',{
+    chart: {
+      type: 'pie',
+      events: {
+        load: function(event) {
+          var chart = this,
+            points = chart.series[0].points,
+            len = points.length,
+            total = 0,
+            i = 0;
+          for (i = 0; i < len; i++) {
+            total += points[i].y;
+          }
+          chart.setTitle({
+            text: '<br>€' + total,
+            verticalAlign: 'middle',
+            style: {
+              fontFamily: 'Arial,Roboto,Helvetica,sans-serif',
+              fontWeight: 'bold',
+              fontSize: 28
+            },
+          });
+        }
+      }
+    },
+    title: {
+      text: '',
+      x: -120 // Positioning total title towards the left
+    },
+    labels: {
+      items: [{
+      	useHTML: true,
+        html: "Transactions" + "<img src='https://github.com/tobi-ajala/shell-exercise/blob/master/icons/card.png?raw=true'/>",
+        style: {
+          fontFamily: 'Arial,Roboto,Helvetica,sans-serif',
+          fontWeight: 'bold',
+          fontSize: 14,
+          verticalAlign: 'middle',
+          top: 150,
+          left: 125
+        }
+      }]
+      //chart.options.labels.text = "Transactions";
+    },
+    tooltip: {
+      formatter: function() {
+        return '<b>' + this.point.name + '</b>: €' + this.y;
+      }
+    },
+    legend: {
+      enabled: true,
+      floating: false,
+      borderWidth: 0,
+      align: 'right',
+      layout: 'vertical', // Display in columns
+      verticalAlign: 'middle',
+      itemMarginTop: 5, // Space between each category in the legend
+      itemMarginBottom: 5,
+      itemStyle: {
+      	lineHeight: "40px"
+      },
+      symbolHeight: 10,
+      useHTML: true,
+      labelFormatter: function() { // Includes cat & price in legend
+        return '<span style="display: block;margin-top: -10px;position: relative;width: 160px;border-bottom: 1px solid rgba(0, 0, 0, 0.31)"><image style="width:20px; height:20px;" src="' + this.icon +'" />&nbsp<span style="font-weight: normal;vertical-align: super;">' + this.name + ' </span> <span style="font-weight: normal;vertical-align: super;position: absolute;right: 0px;">€' + this.y + '<br/></span></span>';
+      }
+    },
+    plotOptions: {
+      pie: {
+        center: [150, 180], // Positioning the donut chart
+        shadow: false
+      }
+    },
+    series: [{
+      name: 'Transactions',
+      data: [{
+        name: 'Fuel',
+        y: 7450.00,
+        icon: 'https://github.com/tobi-ajala/shell-exercise/blob/master/icons/fuel.png?raw=true'
+      }, {
+        name: 'Lubricants',
+        y: 435.00,
+        icon: 'https://github.com/tobi-ajala/shell-exercise/blob/master/icons/lubricants.png?raw=true'
+      }, {
+        name: 'Road Services',
+        y: 200.87,
+        icon: 'https://github.com/tobi-ajala/shell-exercise/blob/master/icons/road.png?raw=true'
+      }, {
+        name: 'Food',
+        y: 45.67,
+        icon: 'https://github.com/tobi-ajala/shell-exercise/blob/master/icons/forkknife.png?raw=true'
+      }, {
+        name: 'Shop',
+        y: 42.45,
+        icon: 'https://github.com/tobi-ajala/shell-exercise/blob/master/icons/shop.png?raw=true'
+      }],
+      size: '60%',
+      innerSize: '85%',
+      showInLegend: true,
+      dataLabels: {
+        enabled: false
+      }
+    }],
+  });
+});
+  </script>
 </html>
